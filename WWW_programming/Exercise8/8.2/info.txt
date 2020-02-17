@@ -1,0 +1,22 @@
+GET-method to URL
+
+-- localhost:3000/players                     Returns list of all players in db.
+-- localhost:3000/players/{ID_of_player}      Returns specific player that matches the ID.
+
+POST-method to URL
+
+-- localhost:3000/players                     Adds a new player to database. Data must be in
+                                              JSON format and object must have attributes
+                                              "name" (String) and "active" (Boolean)
+
+DELETE-method to URL
+
+-- localhost:3000/players                     Deletes all existing players from the db.
+-- localhost:3000/players/{ID_of_player}      Deletes specific player that matches the ID
+
+PUT-method to URL
+
+-- localhost:3000/players/{ID_of_player}      Updates attributes of specific player that
+                                              matches the ID. Data must be in JSON format
+                                              and object must have attribute "name" (String)
+                                              or attribute "active" (Boolean) or both.

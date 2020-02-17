@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Exercise 9.1</title>
+  <script src="https://unpkg.com/redux@latest/dist/redux.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.21.1/babel.min.js"></script>
+</head>
+
+<body>
+</body>
+
+<script type="text/babel">
+  const { createStore, combineReducers } = Redux;
+
+  const ADD_PLAYER = 'ADD_PLAYER'
+  const DELETE_PLAYER = 'DELETE_PLAYER'
+  const CHANGE_ACTIVE = 'CHANGE_ACTIVE'
+
+  function playersApp(state = [], action) {
+    switch(action.type) {
+      case ADD_PLAYER:
+        return [
+            ...state,
+            {
+              id: action.id,
+              name: action.name,
+              active: action.active
+            }
+          ]
+
+      case DELETE_PLAYER:
+        return state.filter((value) => {
+          return value.id != action.id
+        })
+
+      case CHANGE_ACTIVE:
+        return state.map((i) => {
+          if (i.id === action.id) {
+            return {
+            ...i, active: !i.active // flip active status (true -> false or other way round)
+            }
+          } else {
+            return i
+          }
+        })
+
+      default:
+        return state
+    }
+  }
+
+  function addPlayer(id, name, active) {
+    return { type: ADD_PLAYER, id, name, active }
+  }
+
+  function deletePlayer(id) {
+    return { type: DELETE_PLAYER, id}
+  }
+
+  function changeStatus(id) {
+    return { type: CHANGE_ACTIVE, id }
+  }
+
+  const store = createStore(playersApp, window.__REDUX_DEVTOOLS_EXTENSION__
+                            && window.__REDUX_DEVTOOLS_EXTENSION__())
+
+  // log state changes to console
+  const unsubscribe = store.subscribe(() => {
+    console.log(store.getState())
+  })
+
+  store.dispatch(addPlayer(1, 'Jari Kurri', false)) // add player
+  store.dispatch(addPlayer(2, 'Teemu Selänne', true)) // add player
+  store.dispatch(changeStatus(2)) // change active status
+  store.dispatch(deletePlayer(1)) // delete player by id
+
+  unsubscribe()
+
+</script>
+
+</html>

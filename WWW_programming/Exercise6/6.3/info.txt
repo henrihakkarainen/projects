@@ -1,0 +1,48 @@
+POST-method to URL
+
+-- localhost:3000/users                       Creates a new user to database. Data must be in
+                                              JSON format and object must have attributes
+                                              "username" (String) and "password" (String).
+                                              Can't create a new user with the same username
+                                              that exists already in database. Password must
+                                              be longer than 0 characters.
+
+CURL-example: curl -X POST -H "Content-Type: application/json" http://localhost:3000/users/
+              -d '{"username":"name","password":"cat"}’
+
+---------------------------------------------------------------------------------------------
+
+GET-method to URL
+
+-- localhost:3000/players                     Returns list of all players in db.
+-- localhost:3000/players/{ID_of_player}      Returns specific player that matches the ID.
+
+CURL-example: curl localhost:3000/players
+CURL-example: curl localhost:3000/players/{ID}
+
+POST-method to URL
+
+-- localhost:3000/players                     Adds a new player to database. Data must be in
+                                              JSON format and object must have attributes
+                                              "name" (String) and "active" (Boolean)
+
+CURL-example: curl -X POST -H "Content-Type: application/json" http://localhost:3000/players
+              -d '{"name":"Player","active":"true"}’
+
+DELETE-method to URL (AUTHENTICATION REQUIRED)
+
+-- localhost:3000/players                     Deletes all existing players from the db.
+-- localhost:3000/players/{ID_of_player}      Deletes specific player that matches the ID
+
+CURL-example: curl -u USERNAME:PASSWORD -X DELETE http://localhost:3000/players
+CURL-example: curl -u USERNAME:PASSWORD -X DELETE http://localhost:3000/players/{ID}
+
+PUT-method to URL (AUTHENTICATION REQUIRED)
+
+-- localhost:3000/players/{ID_of_player}      Updates attributes of specific player that
+                                              matches the ID. Data must be in JSON format
+                                              and object must have attribute "name" (String)
+                                              or attribute "active" (Boolean) or both.
+
+CURL-example: curl -u USERNAME:PASSWORD -X PUT -H "Content-Type: application/json"
+              http://localhost:3000/players/{ID} -d '{"name":"Player", "active":"true"}'

@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Exercise 9.2</title>
+  <script src="https://unpkg.com/redux@latest/dist/redux.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.21.1/babel.min.js"></script>
+  <style>
+    div {
+      margin: 10px 0px; /* add some margin to div elements */
+    }
+  </style>
+</head>
+
+<body>
+  <p>Hockey players</p>
+  <div id="allPlayers"></div>
+  <div id="player"></div>
+  <br>
+  <form id="addPlayerForm">
+    Name: <input type="text" name="name"><br>
+    Active: <input type="checkbox" name="active">
+  </form>
+  <button id="add" type="button" value="Add" onclick="add()">Add a player</button>
+</body>
+
+<script type="text/babel">
+  const { createStore, combineReducers } = Redux
+
+  const ADD_PLAYER = 'ADD_PLAYER'
+  const DELETE_PLAYER = 'DELETE_PLAYER'
+  const CHANGE_ACTIVE = 'CHANGE_ACTIVE'
+
+  const SHOW_PLAYER = 'SHOW_PLAYER'
+  const RESET_PLAYER = 'RESET_PLAYER'
+
+  // id attribute that increases as more players are created (initial value = 1)
+  let id = 1
+
+  function playerFilter(state = {}, action) {
+    switch (action.type) {
+      // update currently selected player with correct details
+      case SHOW_PLAYER:
+        return {
+          ...state,
+          id: action.id,
+          name: action.name,
+          active: action.active
+        }
+      // reset the state of currently selected player
+      case RESET_PLAYER:
+        state = {}
+      
+      default:
+        return state
+    }
+  }
+
+  function players(state = [], action) {
+    switch (action.type) {
+      // add new player to state-array
+      case ADD_PLAYER:
+        return [
+          ...state,
+          {
+            id: action.id,
+            name: action.name,
+            active: action.active
+          }
+        ]
+      // delete player from state-array by id
+      case DELETE_PLAYER:
+        return state.filter((player) => {
+          return player.id != action.id
+        })
+      // change active status of player from state-array by id
+      case CHANGE_ACTIVE:
+        return state.map((i) => {
+          if (i.id === action.id) {
+            return {
+              ...i, active: !i.active // flip active status (true -> false or other way round)
+            }
+          } else {
+            return i
+          }
+        })
+      // default action
+      default:
+        return state
+    }
+  }
+
+  function lastAction(state = null, action) {
+     return action;
+  }
+
+  function addPlayer(id, name, active) {
+    return { type: ADD_PLAYER, id, name, active }
+  }
+
+  function deletePlayer(id) {
+    return { type: DELETE_PLAYER, id }
+  }
+
+  function changeStatus(id) {
+    return { type: CHANGE_ACTIVE, id }
+  }
+
+  function updateCurrent(id, name, active) {
+    return { type: SHOW_PLAYER, id, name, active }
+  }
+
+  function resetPlayer() {
+    return { type: RESET_PLAYER }
+  }
+
+  const playersApp = combineReducers({
+    playerFilter,
+    players,
+    lastAction
+  })
+
+  const store = createStore(playersApp, window.__REDUX_DEVTOOLS_EXTENSION__
+                && window.__REDUX_DEVTOOLS_EXTENSION__())
+
+  // initiate the store with 2 players
+  store.dispatch(addPlayer(id++, 'Jari Kurri', false)) // add player
+  store.dispatch(addPlayer(id++, 'Teemu Selänne', true)) // add player
+
+  // ---------------------------- 9.2 part ------------------------------
+
+  const createList = () => {
+    const playersDiv = document.getElementById('allPlayers')
+    // when createList() is called multiple times, remove previous items from
+    // div so that there wont be same entries multiple times
+    while (playersDiv.firstChild) {
+      playersDiv.removeChild(playersDiv.firstChild);
+    }
+    for (const player of store.getState().players) {
+      const playerBtn = document.createElement('input')
+      playerBtn.type = 'button'
+      playerBtn.value = player.name
+      playerBtn.addEventListener('click', () => {
+        store.dispatch(updateCurrent(player.id, player.name, player.active))
+      })
+      playersDiv.appendChild(playerBtn)
+      playersDiv.appendChild(document.createElement('br'))
+    }
+  }
+
+  const showInfo = () => {
+    const playerDiv = document.getElementById('player')
+    const divElem = document.createElement('div')
+    const player = store.getState().playerFilter
+    if (player.active) {
+      divElem.innerHTML = `Name: ${player.name}, is active: ${player.active}
+                         <input type="button" value="Change active status to false">
+                         <input type="button" value="Delete this player">`
+      const statusBtn = divElem.firstElementChild
+      statusBtn.addEventListener('click', () => {
+        store.dispatch(changeStatus(player.id)) // change active status
+        store.dispatch(updateCurrent(player.id, player.name, !player.active))
+      })
+    } else {
+      divElem.innerHTML = `Name: ${player.name}, is active: ${player.active}
+                       <input type="button" value="Delete this player">`
+    }
+    const deleteBtn = divElem.lastElementChild
+    deleteBtn.addEventListener('click', () => {
+      store.dispatch(deletePlayer(player.id)) // delete player by id
+    })
+    // if no player button has been clicked, so that player-div is empty
+    if (playerDiv.firstElementChild === null) {
+      playerDiv.appendChild(divElem)
+    } else {
+      playerDiv.replaceChild(divElem, playerDiv.firstElementChild)
+    }
+  }
+
+  const hideInfo = () => {
+    const playerDiv = document.getElementById('player')
+    while (playerDiv.firstChild) {
+      playerDiv.removeChild(playerDiv.firstChild);
+    }
+  }
+
+  const add = () => {
+    const form = document.getElementById('addPlayerForm')
+    const name = form.name.value
+    const active = form.active.checked
+    store.dispatch(addPlayer(id++, name, active)) // add player
+    // reset form fields after adding the player
+    form.name.value = ''
+    form.active.checked = false
+  }
+
+  // track changes in Redux store and render page if necessary
+  store.subscribe(() => {
+    const action = store.getState().lastAction
+    if (action.type === SHOW_PLAYER) {
+      showInfo()
+    } else if (action.type === ADD_PLAYER) {
+      createList() // re-create list of players after adding a new player
+    } else if (action.type === CHANGE_ACTIVE) {
+      createList()
+      showInfo()
+    } else if (action.type === DELETE_PLAYER) {
+      store.dispatch(resetPlayer())
+      createList() // re-create list of player after removing one player
+      hideInfo() // reset player info when the selected player is removed
+    }
+  })
+
+  window.addEventListener('load', createList)
+
+</script>
+
+</html>

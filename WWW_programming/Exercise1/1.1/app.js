@@ -1,0 +1,1 @@
+console.log((isNaN(Number(process.argv[2]))) || isNaN(Number(process.argv[3])) ? 'Fail' : Number(process.argv[2]) + Number(process.argv[3]))

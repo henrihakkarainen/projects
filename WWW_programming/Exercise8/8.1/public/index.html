@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Exercise 8.1</title>
+  <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+
+  <!-- Don't use this in production: -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <style>
+    a {
+      color: blue;
+    }
+    a:active {
+      color: red;
+    }
+    li {
+      padding: 1px 0px;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="root"></div>
+  <script type="text/babel">
+
+    // render the link for a single player
+    function Player(props) {
+      return (
+        <a href={props.link} onClick={props.onClick}>{props.name}</a>
+      )
+    }
+
+    // render the whole list of players
+    class PlayerList extends React.Component {
+      constructor(props) {
+        super(props)
+        this.state = {
+          players: [],
+          current: {}
+        }
+      }
+
+      // fetch all players from API when the page is loaded
+      componentDidMount() {
+        fetch('http://localhost:3000/api/players')
+          .then(res => res.json())
+          .then(results => {
+            // map the players to another list of objects
+            let data = results.map(player => {
+              return (
+                {
+                  id: player._id,
+                  name: player.name,
+                  link: player._links["self"]["href"]
+                }
+              )
+            })
+            this.setState({
+              players: data
+            })
+          })
+          .catch(error => {
+            this.setState({
+              data: 'Could not fetch the player data from API'
+            })
+          })
+      }
+
+      // when a link is clicked, change state of the current selected player
+      handleClick() {
+        event.preventDefault()
+        const url = event.srcElement.href
+        fetch(url)
+          .then(res => res.json())
+          .then(playerData => {
+            this.setState({
+              current: playerData
+            })
+          })
+      }
+
+      // render the list of players
+      renderPlayers() {
+        let list = this.state.players.map(player => {
+          return (
+            <li key={player.id}>
+              <Player
+                name={player.name}
+                link={player.link}
+                onClick={() => this.handleClick()}
+              />
+            </li>
+          )
+        })
+        return list
+      }
+
+      render() {
+        let element;
+        // if user has not yet clicked any player, player info doesn't show on page
+        if ('name' in this.state.current) {
+          element = <div>
+                      <h3>Player info</h3>
+                      <p>Name: {this.state.current.name}<br />
+                         Active: {this.state.current.active ? 'true' : 'false'}
+                      </p>
+                  </div>
+
+        } else {
+          element = ''
+        }
+        return (
+          <div>
+            <h2>List of players</h2>
+            <ul>
+              {this.renderPlayers()}
+            </ul>
+            {element}
+          </div>
+        )
+      }
+
+    }
+
+    // ===============================
+
+    ReactDOM.render(
+      <PlayerList />,
+      document.getElementById('root')
+    );
+
+  </script>
+  <!--
+      Note: this page is a great way to try React but it's not suitable for production.
+      It slowly compiles JSX with Babel in the browser and uses a large development build of React.
+
+      Read this section for a production-ready setup with JSX:
+      https://reactjs.org/docs/add-react-to-a-website.html#add-jsx-to-a-project
+
+      In a larger project, you can use an integrated toolchain that includes JSX instead:
+      https://reactjs.org/docs/create-a-new-react-app.html
+
+      You can also use React without JSX, in which case you can remove Babel:
+      https://reactjs.org/docs/react-without-jsx.html
+    -->
+</body>
+
+</html>

@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Exercise 8.2</title>
+  <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+
+  <!-- Don't use this in production: -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <style>
+    a {
+      color: blue;
+    }
+
+    a:active {
+      color: red;
+    }
+
+    li {
+      padding: 1px 0px;
+    }
+
+    .formDiv {
+      border: 1px solid black;
+      margin-top: 20px;
+      padding: 0px 0px 10px 10px;
+      width: 250px;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="root"></div>
+  <script type="text/babel">
+    // "using" hooks
+    const { useState, useEffect } = React
+
+    // render the link for a single player
+    function Player(props) {
+      return (
+        <a href={props.link} onClick={props.onClick}>{props.name}</a>
+      )
+    }
+
+    // handle and render the form to add players to database
+    function PlayerForm() {
+      const [nameValue, setNameValue] = useState('')
+      const [activeValue, setActiveValue] = useState(false)
+
+      // when form inputs change, update state
+      function handleChange() {
+        if (event.type === 'input') {
+          setNameValue(event.target.value)
+        } else if (event.type === 'click') {
+          setActiveValue(event.target.checked)
+        }
+      }
+      // try to POST new player to API by getting name and active from state
+      function handleSubmit() {
+        event.preventDefault()
+        const newPlayer = {}
+        newPlayer.name = nameValue
+        newPlayer.active = activeValue
+        fetch('/api/players', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(newPlayer)
+        })
+          .then((response) => {
+            if (!response.ok) {
+              throw Error(response.statusText);
+            }
+            // reload page
+            location.reload();
+          })
+          .catch(() => {
+            alert('Oops, something went wrong while trying to add player to DB!');
+            setNameValue('')
+            setActiveValue(false)
+          })
+      }
+
+      return (
+        <div className="formDiv">
+          <h3>Add player</h3>
+          <form onSubmit={() => handleSubmit()}>
+            <label>
+              Name: <input type="text" value={nameValue} onChange={() => handleChange()} />
+            </label><br />
+            <label>
+              Active: <input type="checkbox" checked={activeValue} onChange={() => handleChange()} />
+            </label><br />
+            <input type="submit" value="Submit" />
+          </form>
+        </div>
+      )
+
+    }
+
+    // render the whole list of players
+    function PlayerList() {
+      const [players, setPlayers] = useState([])
+      const [current, setCurrent] = useState({})
+
+      useEffect(() => {
+        fetch('http://localhost:3000/api/players')
+          .then(res => res.json())
+          .then(results => {
+            // map the players to another list of objects
+            let data = results.map(player => {
+              return (
+                {
+                  id: player._id,
+                  name: player.name,
+                  link: player._links["self"]["href"]
+                }
+              )
+            })
+            setPlayers(data)
+          })
+          .catch(error => {
+            setPlayers('Could not fetch the player data from API')
+          })
+      }, [])
+
+      // when a link is clicked, change state of the current selected player
+      function handleClick() {
+        event.preventDefault()
+        const url = event.srcElement.href
+        fetch(url)
+          .then(res => res.json())
+          .then(playerData => {
+            setCurrent(playerData)
+          })
+      }
+      // delete player from database
+      function deletePlayer() {
+        const url = current._links["self"]["href"]
+        fetch(url, {
+          method: 'DELETE'
+        })
+          .then(() => {
+            // reload page
+            location.reload()
+          })
+      }
+      // render the list of players
+      function renderPlayers() {
+        let list = players.map(player => {
+          return (
+            <li key={player.id}>
+              <Player
+                name={player.name}
+                link={player.link}
+                onClick={() => handleClick()}
+              />
+            </li>
+          )
+        })
+        return list
+      }
+
+      let element;
+      // if user has not yet clicked any player, player info doesn't show on page
+      if ('name' in current) {
+        element = <div>
+          <h3>Player info</h3>
+          <p>Name: {current.name}<br />
+            Active: {current.active ? 'true' : 'false'}
+          </p>
+          <button onClick={() => deletePlayer()}>Delete this player</button>
+        </div>
+
+      } else {
+        element = ''
+      }
+      return (
+        <div>
+          <h2>List of players</h2>
+          <ul>
+            {renderPlayers()}
+          </ul>
+          {element}
+          <PlayerForm />
+        </div>
+      )
+    }
+
+
+    // ===============================
+
+    ReactDOM.render(
+      <PlayerList />,
+      document.getElementById('root')
+    );
+
+  </script>
+  <!--
+      Note: this page is a great way to try React but it's not suitable for production.
+      It slowly compiles JSX with Babel in the browser and uses a large development build of React.
+
+      Read this section for a production-ready setup with JSX:
+      https://reactjs.org/docs/add-react-to-a-website.html#add-jsx-to-a-project
+
+      In a larger project, you can use an integrated toolchain that includes JSX instead:
+      https://reactjs.org/docs/create-a-new-react-app.html
+
+      You can also use React without JSX, in which case you can remove Babel:
+      https://reactjs.org/docs/react-without-jsx.html
+    -->
+</body>
+
+</html>

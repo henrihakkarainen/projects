@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JWT - Harjoitustyö</title>
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="flag-icon-css-master/css/flag-icon.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Indie+Flower&display=swap">
+</head>
+
+<body>
+    <div class="travelerName">
+        <span class="card-text">
+            <label for="input">Matkailijan nimi:</label>
+            <!-- ^[a-zA-Z ]{2,}$ -->
+            <input type="text" id="input" class="form-control" placeholder="Vain kirjaimet väliltä A-Z sallittuja" required pattern="^[a-zA-Z]{1}[a-zA-Z ]{1,}$">
+        </span>
+        <button type="button" id="submitbutton" class="btn btn-light" disabled>Submit</button>
+    </div>
+    <main class="container">
+        <div class="container" hidden>
+            <div class="row">
+                <div class="col-md-4 col-lg-3">
+                    <div class="itinerary sticky-top">
+                        <h3>Travel itinerary</h3>
+                        <div id="abbrList"></div>
+                        <button type="button" id="finished" class="btn btn-dark" hidden>Summary</button>
+                    </div>
+                </div>
+                <div class="col-md-8 col-lg-9">
+                    <h1>JWT HT</h1>
+                    <div class="trip">
+                        <h3>Select initial starting country</h3>
+                        <div id="tiers"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="summary" hidden>
+            <h1>Travel Summary</h1>
+            <hr>
+            <h3 id="customer"></h3>
+            <hr>
+            <div class="countryList"></div>
+        </div>
+    </main>
+    <script src="https://underscorejs.org/underscore-min.js"></script>
+    <script src="js/script.js"></script>
+</body>
+</html>
