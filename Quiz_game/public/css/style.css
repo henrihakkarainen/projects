@@ -1,0 +1,202 @@
+#assignment {
+    font-weight: bold;
+    font-size: 1.3rem;
+    width: 675px;
+    padding: 5px;
+    margin: 15px auto;
+}
+
+#container {
+    display: flex;
+    flex-flow: row wrap;
+    width: 675px;
+    min-height: 64px;
+    padding: 5px;
+    margin: 15px auto;
+    border: 2px solid black;
+}
+
+#container div {
+    color: black;
+    font-size: 30px;
+    font-weight: bold;
+    text-align: center;
+    padding: 10px;
+    border: 2px solid black;
+    border-radius: 10px;
+    margin: 5px;
+}
+
+#bubbles div:hover,
+#container div:hover {
+    color: aquamarine;
+}
+
+#bubbles {
+    width: 620px;
+    min-height: 700px;
+    padding: 10px;
+    position: relative;
+    border: 2px solid black;
+    margin: 15px auto;
+}
+
+.bubble {
+    color: black;
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+    padding: 5px;
+    border: 2px solid black;
+    border-radius: 10px;
+    margin: 5px;
+    position: absolute;
+    max-width: 185px;
+}
+
+.red {
+    background: red;
+}
+
+.yellow {
+    background: yellow;
+}
+
+.blue {
+    /* background: blue; */
+    background: lightskyblue;
+}
+
+.green {
+    background: green;
+}
+
+.hidden {
+    display: none;
+}
+
+textarea {
+    resize: none;
+}
+
+.q5 {
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.question {
+    font-size: 1.1em;
+    margin-bottom: 5px;
+}
+
+.answers {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    text-align: left;
+    display: inline-block;
+}
+
+.answers label{
+    display: block;
+    margin-bottom: 10px;
+}
+
+.slide{
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    z-index: 1;
+    opacity: 0;
+    transition: opacity 0.4s;
+}
+
+.active-slide{
+    opacity: 1;
+    z-index: 2;
+}
+
+.quiz-container{
+    position: relative;
+    height: 200px;
+    margin-top: 40px;
+}
+
+.hiddenButton {
+    display: none;
+}
+
+.has-search .form-control {
+    padding-left: 2.375rem;
+    margin-top: 7px;
+}
+
+.has-search .form-control-feedback {
+    position: absolute;
+    margin-top: 7px;
+    z-index: 2;
+    display: block;
+    width: 2.375rem;
+    height: 2.375rem;
+    line-height: 2.375rem;
+    text-align: center;
+    pointer-events: none;
+    color: #aaa;
+}
+
+.track-progress {
+    height: 80px;
+    width: 100%;
+    text-align: center;
+    margin: 0;
+}
+    
+.track-progress li {
+    list-style-type: none;
+    position: relative;
+    text-align: center;
+    color: #bbb;
+    border-bottom: 4px #bbb solid;
+    line-height: 3em;
+    float: left;
+}
+      
+.track-progress li:after {
+    content: "\00a0\00a0";
+}
+      
+.track-progress li:before {
+    position: relative;
+    bottom: -2.6em;
+    float: left;
+    left: 50%;
+}
+      
+.track-progress li span {
+    padding-left: 0.75em;
+}
+    
+.track-progress li.done {
+    color: #bbb;
+    font-weight: bold;
+    border-bottom: 4px #bbb solid;
+}
+      
+.track-progress li.done:before {
+    content: "";
+    background: #bbb;
+    border: 0.1em solid #bbb;
+    height: 0.9em;
+    width: 0.9em;
+    border-radius: 1em;
+}
+    
+.track-progress li.todo:before {
+    content: "";
+    background: white;
+    border: 0.1em solid #bbb;
+    height: 0.9em;
+    width: 0.9em;
+    border-radius: 1em;
+}
+  
