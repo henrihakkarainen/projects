@@ -1,0 +1,19 @@
+body {
+  margin: 1;
+}
+div {
+  background-color: grey;
+  width: 98vw;
+  height: 95vh;
+  color: white;
+  padding: 10px;
+}
+
+p {
+  background-color: black;
+  width: 50%;
+  color: white;
+  height: 92%;
+  margin: auto;
+  padding: 10px;
+}

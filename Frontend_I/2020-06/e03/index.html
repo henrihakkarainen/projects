@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <title>Week 6 - e03</title>
+</head>
+
+<body>
+  <form id="myform">
+    <div>
+      <h1>Login</h1>
+      <hr />
+      <div>
+        <label for="email"><b>Email</b></label>
+        <input type="text" placeholder="Enter Email" name="email" required />
+      </div>
+      <div>
+        <label for="psw"><b>Password</b></label>
+        <input type="password" placeholder="Enter Password" name="psw" required />
+      </div>
+      <button type="submit">Login</button>
+    </div>
+  </form>
+  <p id="error" style="color: red; display: none;">Incorrect credentials</p>
+  <p id="success" style="color: green; display: none;">Success</p>
+  <script src="scripts.js"></script>
+</body>
+
+</html>

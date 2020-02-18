@@ -1,0 +1,32 @@
+{
+  "name": "api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "./node_modules/.bin/nodemon -w src src/index.js",
+    "lint:es": "eslint --no-ignore src",
+    "test": "nyc mocha --timeout 2000",
+    "test:watch": "./node_modules/.bin/nodemon --exec 'npm run test'"
+  },
+  "author": "Henri",
+  "license": "ISC",
+  "dependencies": {
+    "kcors": "^2.2.2",
+    "koa": "^2.11.0",
+    "koa-bodyparser": "^4.2.1",
+    "koa-router": "^7.4.0",
+    "pg": "^7.17.1"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "chai-http": "^4.3.0",
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-plugin-import": "^2.20.0",
+    "mocha": "^7.0.1",
+    "nodemon": "^2.0.2",
+    "nyc": "^15.0.0"
+  }
+}

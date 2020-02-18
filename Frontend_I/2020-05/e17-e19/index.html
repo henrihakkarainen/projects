@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>e17-e19</title>
+    <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.1/build/pure-min.css" integrity="sha384-oAOxQR6DkCoMliIh8yFnu25d7Eq/PHS21PClpwjOTeU2jRSq11vu66rf90/cZr47" crossorigin="anonymous">
+    <style>
+      body {
+        padding: 1px;
+      }
+      div {
+        margin: 10px;
+      }
+    </style>
+</head>
+<body>
+  <div>
+    <button id="addLocation">Add random location to API</button>
+  </div>
+  <div>
+    <table class="pure-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Latitude</th>
+          <th>Longitude</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td></td>
+          <td><input type="text" id="latitude" placeholder="latitude"></td>
+          <td><input type="text" id="longitude" placeholder="longitude"></td>
+          <td><input type="button" id="addBtn" value="Add"></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+    <script src="index.js"></script>
+</body>
+</html>

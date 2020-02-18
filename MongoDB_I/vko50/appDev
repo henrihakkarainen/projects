@@ -1,0 +1,11 @@
+#! dockerfile
+FROM node:slim
+
+COPY ./app /opt/app
+COPY ./app/package.json /opt/app/package.json
+RUN cd /opt/app && npm install
+
+WORKDIR /opt/app
+EXPOSE 9000
+
+CMD ["npm", "run", "dev"]

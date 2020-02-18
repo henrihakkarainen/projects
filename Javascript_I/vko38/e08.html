@@ -1,0 +1,37 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Sivu</title>
+</head>
+<body>
+  <script>
+  // a-kohta
+  for (key in window) {
+    console.log(key, window[key])
+  }
+  // b-kohta
+  var muuttuja = 5
+  console.log(window.muuttuja)
+  // c-kohta
+  var a = "a"
+  b = "b"
+  console.log(a, b)
+  delete window.a // poisto ei onnistu
+  delete window.b // poisto onnistuu
+  console.log(a)
+  // console.log(b) // -> b is not defined
+
+  // d-kohta
+  function Circle(radius) {
+    this.radius = radius
+  }
+  var c = new Circle(4)
+  console.log(c.radius)
+  var d = Circle(5) // ei käytetä new-sanaa, radius avain menee globaalin
+                    // window-muuttujan alle
+  console.log(window.radius) // -> 5
+  </script>
+</body>
+</html>

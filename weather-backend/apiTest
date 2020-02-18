@@ -1,0 +1,9 @@
+#! dockerfile
+FROM node:slim
+
+COPY ./_api /opt/api
+RUN cd /opt/api && npm install
+
+WORKDIR /opt/api
+
+CMD ["npm", "run", "test"]
