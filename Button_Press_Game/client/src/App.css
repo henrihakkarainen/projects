@@ -1,0 +1,49 @@
+.App {
+  text-align: center;
+  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+  width: 98vw;
+  margin-bottom: 40px;
+}
+
+.Game {
+  border: 2px ridge black;
+  border-radius: 20px;
+  padding: 10px;
+  width: 330px;
+  margin: 30px auto;
+  background-color: rgba(179, 144, 144, 0.3);
+}
+
+p {
+  font-weight: bolder;
+}
+
+article {
+  text-align: justify;
+  width: 350px;
+  margin: 0px auto;
+}
+
+caption {
+  font-size: 1.5em;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+table {
+  border-collapse: collapse;
+  margin: 0px auto;
+}
+
+table td, table th {
+  border: 2px solid black;
+  padding: 8px;
+  text-align: justify;
+}
+
+table th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: center;
+  background-color: rgb(170, 170, 170, 0.4);
+}
