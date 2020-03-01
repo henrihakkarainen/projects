@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Exercise 10.1</title>
+  <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/redux@latest/dist/redux.min.js"></script>
+  <script src="https://unpkg.com/react-redux@latest/dist/react-redux.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.21.1/babel.min.js"></script>
+  <style>
+    div {
+      margin: 10px 0px; /* add some margin to div elements */
+    }
+    button {
+      margin-left: 5px;
+    }
+    #submit {
+      margin: 10px 0px 0px 0px;
+    }
+    input {
+      margin: 0px 5px;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="root"></div>
+</body>
+
+<script type="text/babel">
+  const { createStore, combineReducers } = Redux
+  const { connect, Provider } = ReactRedux
+  const { useState } = React
+
+  const ADD_PLAYER = 'ADD_PLAYER'
+  const DELETE_PLAYER = 'DELETE_PLAYER'
+  const CHANGE_ACTIVE = 'CHANGE_ACTIVE'
+  const SHOW_PLAYER = 'SHOW_PLAYER'
+  const RESET_PLAYER = 'RESET_PLAYER'
+
+  // id attribute that increases as more players are created (initial value = 1)
+  let id = 1
+
+  function current(state = {}, action) {
+    switch (action.type) {
+      // update currently selected player with correct details
+      case SHOW_PLAYER:
+        return {
+          ...state,
+          id: action.id,
+          name: action.name,
+          active: action.active
+        }
+      // reset the state of currently selected player
+      case RESET_PLAYER:
+        state = {}
+      
+      default:
+        return state
+    }
+  }
+
+  function players(state = [], action) {
+    switch (action.type) {
+      // add new player to state-array
+      case ADD_PLAYER:
+        return [
+          ...state,
+          {
+            id: action.id,
+            name: action.name,
+            active: action.active
+          }
+        ]
+      // delete player from state-array by id
+      case DELETE_PLAYER:
+        return state.filter((player) => {
+          return player.id != action.id
+        })
+      // change active status of player from state-array by id
+      case CHANGE_ACTIVE:
+        return state.map((i) => {
+          if (i.id === action.id) {
+            return {
+              ...i, active: !i.active // flip active status (true -> false or other way round)
+            }
+          } else {
+            return i
+          }
+        })
+      // default action
+      default:
+        return state
+    }
+  }
+
+  function addPlayer(id, name, active) {
+    return { type: ADD_PLAYER, id, name, active }
+  }
+
+  function deletePlayer(id) {
+    return { type: DELETE_PLAYER, id }
+  }
+
+  function changeStatus(id) {
+    return { type: CHANGE_ACTIVE, id }
+  }
+
+  function updateCurrent(id, name, active) {
+    return { type: SHOW_PLAYER, id, name, active }
+  }
+
+  function resetPlayer() {
+    return { type: RESET_PLAYER }
+  }
+
+  const playersApp = combineReducers({
+    current,
+    players
+  })
+
+  const store = createStore(playersApp, window.__REDUX_DEVTOOLS_EXTENSION__
+                && window.__REDUX_DEVTOOLS_EXTENSION__())
+
+  // initiate the store with 2 players
+  store.dispatch(addPlayer(id++, 'Jari Kurri', false)) // add player
+  store.dispatch(addPlayer(id++, 'Teemu Selänne', true)) // add player
+
+  // ---------------------------- 10.1 React ------------------------------
+
+  function Page(props) {
+    const [newPlayerName, setNewPlayerName] = useState('')
+    const [newPlayerActive, setNewPlayerActive] = useState(false)
+
+    const handleSubmit = (event) => {
+      event.preventDefault()
+      props.addPlayer(id++, newPlayerName, newPlayerActive)
+    }
+
+    const handleClick = (player) => {
+      props.updateCurrent(player.id, player.name, player.active)
+    }
+
+    const removePlayer = () => {
+      const current = props.currentPlayer
+      props.deletePlayer(current.id)
+      props.resetPlayer()
+    }
+
+    const changeStatus = () => {
+      const current = props.currentPlayer
+      props.changeStatus(current.id)
+      props.updateCurrent(current.id, current.name, !current.active)
+    }
+
+    const handleNameChange = (event) => {
+      setNewPlayerName(event.target.value)
+    }
+
+    const handleActiveChange = (event) => {
+      setNewPlayerActive(event.target.checked)
+    }
+
+    return (
+      <div>
+        <h1>Hockey players</h1>
+        <AddPlayer handleSubmit={handleSubmit}
+        name={newPlayerName}
+        active={newPlayerActive}
+        handleNameChange={handleNameChange}
+        handleActiveChange={handleActiveChange}/>
+        <h2>List of players</h2>
+        <Players players={props.players} handleClick={handleClick}/>
+        <div>
+          <PlayerInfo currentPlayer={props.currentPlayer}
+          removePlayer={removePlayer} changeStatus={changeStatus}/>
+        </div>
+      </div>
+    )
+  }
+
+  function AddPlayer(props) {
+    return (
+      <div>
+        <h2>Add player</h2>
+        <form onSubmit={props.handleSubmit}>
+          <label htmlFor="name">Player name:</label>
+          <input id="name" type="text" name="name"
+                 value={props.newPlayerName} onChange={props.handleNameChange}/>
+          <label htmlFor="active">Active status:</label>
+          <input id="active" type="checkbox" name="active"
+                 value={props.newPlayerActive} onChange={props.handleActiveChange} />
+          <br />
+          <button type="submit" id="submit">Submit</button>
+        </form>
+      </div>
+    )
+  }
+
+  function Players(props) {
+    return (
+      <div>
+        <ul>
+          {props.players.map((player) => {
+            return (
+              <li key={player.id}>
+                <a href="#"
+                onClick={() => props.handleClick(player)}>
+                {player.name}
+                </a>
+              </li>
+            )
+          })}
+        </ul>
+      </div>
+    )
+  }
+
+  function PlayerInfo(props) {
+    if (!props.currentPlayer.id) {
+      return (
+        <div>
+        </div>
+      )
+    }
+    else {
+      return (
+        <div>
+          Name: {props.currentPlayer.name}, active: {props.currentPlayer.active.toString()} 
+          {props.currentPlayer.active ? <button onClick={props.changeStatus}>Change active status to false</button> : ''}
+          <button onClick={props.removePlayer}>Delete the player</button>
+        </div>
+      )
+    }
+  }
+
+  const mapStateToProps = (state) => {
+    return {
+      currentPlayer: state.current,
+      players: state.players
+    }
+  }
+
+  const mapDispatchToProps = (dispatch) => {
+    return {
+      addPlayer: (id, name, active) => dispatch(addPlayer(id, name, active)),
+      deletePlayer: (id) => dispatch(deletePlayer(id)),
+      changeStatus: (id) => dispatch(changeStatus(id)),
+      updateCurrent: (id, name, active) => dispatch(updateCurrent(id, name, active)),
+      resetPlayer: () => dispatch(resetPlayer())
+    }
+  }
+
+  const App = connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(Page)
+
+  ReactDOM.render(
+    <Provider store={store}>
+      <App />
+    </Provider>, document.getElementById('root')
+  )
+
+</script>
+
+</html>
