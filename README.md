@@ -6,6 +6,8 @@ Structure with short descriptions of the folder contents:
 
 ```
 └── projects/
+   ├── Button_Press_Game/
+   │    └── Multi-user browser game (frontend + backend)
    ├── Frontend_I/
    │    └── Javascript in web browsers (various exercises and topics)
    ├── Java_I/
@@ -26,11 +28,12 @@ Structure with short descriptions of the folder contents:
    │    └── Exercises from my first Python course (basics)
    ├── Quiz_game/
    │    └── Game + management view with login etc. (large groupwork project)
+   ├── Service_Manual_API/
+   │    └── REST API implementation
    ├── Simple_JS_Project/
    │    └── My first plain JavaScript project (travel planning app)
-   ├── weather-backend/
+   ├── Weather_API/
    │    └── Simple Weather API implementation mini-project
-   ├── WWW_Programming/
-   │    └── Exercises from www programming course (frontend + backend stuff)
-   └── ...
+   └── WWW_Programming/
+        └── Exercises from www programming course (frontend + backend stuff)
 ```
