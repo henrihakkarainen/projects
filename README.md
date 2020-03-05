@@ -28,8 +28,6 @@ Structure with short descriptions of the folder contents:
    │    └── Exercises from my first Python course (basics)
    ├── Quiz_game/
    │    └── Game + management view with login etc. (large groupwork project)
-   ├── Service_Manual_API/
-   │    └── REST API implementation
    ├── Simple_JS_Project/
    │    └── My first plain JavaScript project (travel planning app)
    ├── Weather_API/
