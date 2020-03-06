@@ -14,10 +14,8 @@ Structure with short descriptions of the folder contents:
    │    └── Exercises from my second Java course
    ├── Java_III/
    │    └── Exercises from my third Java course (object oriented)
-   ├── Java_Project_I/
-   │    └── My first bigger Java project (simple shell simulation)
-   ├── Java_Project_II/
-   │    └── My second Java project (own hashtable with set operations)
+   ├── Java_Project/
+   │    └── Small Java project (with own hashtable and set operations)
    ├── Javascript_I/
    │    └── Exercises from my first Javascript course (basics)
    ├── MongoDB_I/
