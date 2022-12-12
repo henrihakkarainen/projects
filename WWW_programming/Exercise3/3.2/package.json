@@ -9,7 +9,7 @@
   "author": "Henri",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "express-sanitizer": "^1.0.5",
     "express-session": "^1.17.0"
   }
